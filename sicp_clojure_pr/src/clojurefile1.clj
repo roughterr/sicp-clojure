@@ -72,4 +72,32 @@ larger numbers"
   )
 (sum-of-squares-of-two-larger 2 3 4)
 
-;Exercise 1.4
+;Exercise 1.7
+(defn average [x y]
+  (/ (+ x y) 2))
+(defn improve [guess x]
+  (average guess (/ x guess)))
+(defn good-enough? [guess x]
+  (< (abs (- (square guess) x)) 0.001))
+(defn sqrt-iter [guess x]
+  (if (good-enough? guess x)
+    guess
+    (sqrt-iter (improve guess x) x)))
+(defn sqrt [x]
+  (sqrt-iter 1.0 x))
+(sqrt 9)
+;improved
+(defn good-enough-improved? [old-guess new-guess x]
+  (def difference (abs (- new-guess old-guess)))
+  "improved version of the function. If the new guess is not much different from the old one, then stop guessing."
+  (< (/ difference new-guess) 0.01))
+(defn sqrt-iter-improved [old-guess new-guess x]
+  (if (good-enough-improved? old-guess new-guess x)
+    new-guess
+    (sqrt-iter-improved new-guess (improve new-guess x) x)))
+(defn sqrt-improved [x]
+  (sqrt-iter-improved 0 1.0 x))
+;(sqrt 0.0001)
+;(sqrt-improved 0.0001)
+;(sqrt 100000000)
+;(sqrt-improved 100000000)
