@@ -101,3 +101,12 @@ larger numbers"
 ;(sqrt-improved 0.0001)
 ;(sqrt 100000000)
 ;(sqrt-improved 100000000)
+;Exercise 1.8
+(defn improve-cuberoot [guess x]
+  (/ (+ (/ x (square guess)) (* 2 guess)) 3))
+(defn cubert-iter [old-guess new-guess x]
+  (if (good-enough-improved? old-guess new-guess x)
+    new-guess
+    (cubert-iter new-guess (improve-cuberoot new-guess x) x)))
+(defn cuberoot [x] (cubert-iter 0 1.0 x))
+;(cuberoot 8)
