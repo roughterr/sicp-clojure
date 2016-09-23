@@ -103,7 +103,7 @@ larger numbers"
 ;(sqrt-improved 100000000)
 ;Exercise 1.8
 (defn cuberoot [x]
-;  (.println (System/out) "cuberoot")
+  ;  (.println (System/out) "cuberoot")
   (defn improve-cuberoot [guess]
     (/ (+ (/ x (square guess)) (* 2 guess)) 3))
   (defn cubert-iter [old-guess new-guess]
@@ -113,3 +113,42 @@ larger numbers"
   (cubert-iter 0 1.0)
   )
 (cuberoot 8)
+
+;Exercise 1.10
+(defn A [x y]
+  (cond (= y 0) 0
+    (= x 0) (* 2 y)
+    (= y 1) 2
+    :else (A (- x 1) (A x (- y 1)))))
+;(A 1 10)
+;(A 2 4)
+;(A 3 3)
+
+;Exercise 1.11
+(defn f-recursive [n]
+  (if (< n 3) n (+ (f-recursive (- n 1)) (* 2 (f-recursive (- n 2))) (* 3 (f-recursive (- n 3))))))
+;(f-recursive 5)
+
+(defn f-iterative1 [n add]
+  (if (< n 3)
+    (+ n add)
+    (f-iterative (- n 1) (+ (+ (* 2 (f-recursive (- n 2))) (* 3 (f-recursive (- n 3)))) add))
+    ))
+;(f-iterative1 5 0)
+
+(defn f-iterative [n]
+  (defn iter [e1 e2 e3]
+    (+ e1 (* 2 e2) (* 3 e3))
+    )
+  (iter))
+;TODO
+
+;Exercise 1.12
+(defn get-elemet-of-pascal-triangle [row column]
+  "returns value of an element of the Pascal’s triangle."
+  (
+    cond (or (= column 0) (= row 0)) 0
+    (or (= row 1) (= row column)) 1
+    :else (+ (get-elemet-of-pascal-triangle (- row 1) (- column 1)) (get-elemet-of-pascal-triangle row (- column 1)))
+    ))
+;(get-elemet-of-pascal-triangle 3 5); 6 is expected
