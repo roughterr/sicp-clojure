@@ -146,3 +146,17 @@ larger numbers"
     :else (+ (get-elemet-of-pascal-triangle (- row 1) (- column 1)) (get-elemet-of-pascal-triangle row (- column 1)))
     ))
 ;(get-elemet-of-pascal-triangle 3 5); 6 is expected
+
+;Exercise 1.15
+(defn cube [x] (* x x x))
+(defn p [x] (- (* 3 x) (* 4 (cube x))))
+(defn sine [angle]
+  (if (not (> (abs angle) 0.1)) angle
+    (p (sine (/ angle 3.0)))))
+;(sine 12.15)
+
+;Exercise 1.16
+(defn fast-expt-iter [b n]
+  (defn iter [b n a] (cond (= n 0) a (even? n) (iter (square b) (/ n 2) a) :else (iter b (- n 1) (* a b))))
+  (iter b n 1))
+;(fast-expt-iter 2 5)
