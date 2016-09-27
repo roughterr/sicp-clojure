@@ -128,20 +128,14 @@ larger numbers"
 (defn f-recursive [n]
   (if (< n 3) n (+ (f-recursive (- n 1)) (* 2 (f-recursive (- n 2))) (* 3 (f-recursive (- n 3))))))
 ;(f-recursive 5)
-
-(defn f-iterative1 [n add]
-  (if (< n 3)
-    (+ n add)
-    (f-iterative (- n 1) (+ (+ (* 2 (f-recursive (- n 2))) (* 3 (f-recursive (- n 3)))) add))
-    ))
-;(f-iterative1 5 0)
+;(f-recursive 7) ;result must be 142
 
 (defn f-iterative [n]
-  (defn iter [e1 e2 e3]
-    (+ e1 (* 2 e2) (* 3 e3))
-    )
-  (iter))
-;TODO
+  (defn iter [two-minus one-minus current i]
+    (if (= i 4) (+ (* 2 two-minus) (* 4 one-minus) (* 11 current))
+      (iter (* 3 current) (+ (* 2 current) two-minus) (+ current one-minus) (- i 1))))
+  (if (< n 3) n (iter 0 0 1 n)))
+;(f-iterative 7)
 
 ;Exercise 1.12
 (defn get-elemet-of-pascal-triangle [row column]
