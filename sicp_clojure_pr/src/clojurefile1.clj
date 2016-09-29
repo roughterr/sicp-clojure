@@ -8,13 +8,11 @@
   (+ (square x) (square y)))
 ;(sum-of-squares 3 4)
 
-(defn abs [x]
-  "changes sign of a number"
+(defn abs "changes sign of a number" [x]
   (cond (> x 0) x
     (= x 0) 0
     (< x 0) (- x)))
-(defn abs-with-if [x]
-  "changes sign of a number. uses if function inside"
+(defn abs-with-if "changes sign of a number. uses if function inside" [x]
   (if (< x 0)
     x
     (- x)))
@@ -56,18 +54,17 @@
     (biggest-of-two n1 n2)
     (biggest-of-two n2 n3))
   )
-(defn middle-of-three [n1 n2 n3]
-  "returns not a smallest but not biggest number of given 3 numbers"
+(defn middle-of-three "returns not a smallest but not biggest number of given 3 numbers"
+  [n1 n2 n3]
   (def biggest-one (biggest-of-three n1 n2 n3))
   (cond (= biggest-one n1) (biggest-of-two n2 n3)
     (= biggest-one n2) (biggest-of-two n1 n3)
     (= biggest-one n3) (biggest-of-two n1 n2)
     )
   )
-(defn sum-of-squares-of-two-larger [n1 n2 n3]
-  "procedure that takes three numbers
-as arguments and returns the sum of the squares of the two
-larger numbers"
+(defn sum-of-squares-of-two-larger
+  "procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers"
+  [n1 n2 n3]
   (+ (square (biggest-of-three n1 n2 n3)) (square (middle-of-three n1 n2 n3)))
   )
 (sum-of-squares-of-two-larger 2 3 4)
@@ -138,8 +135,8 @@ larger numbers"
 ;(f-iterative 7)
 
 ;Exercise 1.12
-(defn get-elemet-of-pascal-triangle [row column]
-  "returns value of an element of the Pascal’s triangle."
+(defn get-elemet-of-pascal-triangle "returns value of an element of the Pascal’s triangle."
+  [row column]
   (
     cond (or (= column 0) (= row 0)) 0
     (or (= row 1) (= row column)) 1
@@ -175,7 +172,7 @@ larger numbers"
 (defn fib [n]
   (fib-iter 1 0 0 1 n))
 (defn fib-iter [a b p q count]
-  (println "a=" a ", b=" b ", p=" p ", q=" q ", count=" count)
+  ;  (println "a=" a ", b=" b ", p=" p ", q=" q ", count=" count)
   (cond (= count 0) b
     (even? count)
     (fib-iter a b
