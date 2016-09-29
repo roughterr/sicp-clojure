@@ -160,3 +160,29 @@ larger numbers"
   (defn iter [b n a] (cond (= n 0) a (even? n) (iter (square b) (/ n 2) a) :else (iter b (- n 1) (* a b))))
   (iter b n 1))
 ;(fast-expt-iter 2 5)
+
+;Exercise 1.17
+(defn fast-multiplication-rec [a b]
+  (cond (= b 1) a (even? b) (fast-multiplication (+ a a) (/ b 2)) :else (+ a (fast-multiplication a (- b 1)))))
+
+;Exercise 1.18
+(defn fast-multiplication-iter [a b]
+  (defn iter [a b just-add] (cond (= b 1) (+ a just-add)
+                              (even? b) (iter (+ a a) (/ b 2) just-add) :else (iter a (- b 1) (+ a just-add))))
+  (iter a b 0))
+
+;Exercise 1.19
+(defn fib [n]
+  (fib-iter 1 0 0 1 n))
+(defn fib-iter [a b p q count]
+  (println "a=" a ", b=" b ", p=" p ", q=" q ", count=" count)
+  (cond (= count 0) b
+    (even? count)
+    (fib-iter a b
+      (+ (* p p) (* q q)) ; compute p′
+      (+ (* q q) (* 2 (* p q))) ; compute q′
+      (/ count 2))
+    :else (fib-iter (+ (* b q) (* a q) (* a p))
+            (+ (* b p) (* a q))
+            p q
+            (- count 1))))
