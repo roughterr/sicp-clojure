@@ -183,3 +183,43 @@
             (+ (* b p) (* a q))
             p q
             (- count 1))))
+
+;Exercise 1.21
+(defn divides? [a b] (= (rem b a) 0))
+(defn find-divisor [n test-divisor]
+  (cond (> (square test-divisor) n) n
+    (divides? test-divisor n) test-divisor
+    :else (find-divisor n (+ test-divisor 1))))
+(defn smallest-divisor [n] (find-divisor n 2))
+;(smallest-divisor 199)
+;(smallest-divisor 1999)
+;(smallest-divisor 19999)
+
+;Exercise 1.22
+(defn prime? [n]
+  (= n (smallest-divisor n)))
+(defn current-time "returns the current time" (System/nanoTime))
+(defn report-prime [elapsed-time]
+  (println " *** ")
+  (println elapsed-time))
+(defn start-prime-test [n start-time]
+  (if (prime? n)
+    (report-prime (- (current-time) start-time))))
+(defn timed-prime-test [n]
+  (newline)
+  (println n)
+  (start-prime-test n (current-time)))
+(defn search-for-primes
+  "checks the primality of consecutive odd integers in a specified range"
+  [larger-than how-much-find]
+  (def start-time (current-time))
+  (defn iter
+    [larger-than how-much-find]
+    (def n "number in question" (+ larger-than 1))
+    (if (prime? n)
+      (if (= how-much-find 1) (report-prime (- (current-time) start-time)) (iter n (- how-much-find 1)))
+      (iter n how-much-find)))
+  (iter larger-than how-much-find))
+;(search-for-primes 1000 3)
+;(search-for-primes 10000 3)
+;(search-for-primes 100000 3)
