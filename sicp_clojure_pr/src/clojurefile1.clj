@@ -189,8 +189,10 @@
 (defn find-divisor [n test-divisor]
   (cond (> (square test-divisor) n) n
     (divides? test-divisor n) test-divisor
-    :else (find-divisor n (+ test-divisor 1))))
-(defn smallest-divisor [n] (find-divisor n 2))
+    :else (find-divisor n (next-divisor-guess test-divisor))))
+(defn smallest-divisor
+  "finds the smallest integral divisor (greater than 1) of a given number n"
+  [n] (find-divisor n 2))
 ;(smallest-divisor 199)
 ;(smallest-divisor 1999)
 ;(smallest-divisor 19999)
@@ -198,28 +200,50 @@
 ;Exercise 1.22
 (defn prime? [n]
   (= n (smallest-divisor n)))
-(defn current-time "returns the current time" (System/nanoTime))
+(defn runtime
+  "Returns the current value of the running Java Virtual Machine's high-resolution time source, in nanoseconds"
+  [] (System/nanoTime))
 (defn report-prime [elapsed-time]
   (println " *** ")
   (println elapsed-time))
 (defn start-prime-test [n start-time]
-  (if (prime? n)
-    (report-prime (- (current-time) start-time))))
+  (def is-prime (fast-prime? n 4))
+  (if is-prime
+    (report-prime (- (runtime) start-time)))
+  is-prime)
 (defn timed-prime-test [n]
-  (newline)
-  (println n)
-  (start-prime-test n (current-time)))
+  ;(println "Checking whether the following number is a prime number: " n)
+  (start-prime-test n (runtime)))
 (defn search-for-primes
   "checks the primality of consecutive odd integers in a specified range"
-  [larger-than how-much-find]
-  (def start-time (current-time))
-  (defn iter
-    [larger-than how-much-find]
+  [larger-than how-many-find]
+  (def start-time (runtime))
+  (defn iter [larger-than how-many-find]
     (def n "number in question" (+ larger-than 1))
-    (if (prime? n)
-      (if (= how-much-find 1) (report-prime (- (current-time) start-time)) (iter n (- how-much-find 1)))
-      (iter n how-much-find)))
-  (iter larger-than how-much-find))
+    (if (timed-prime-test n)
+      (if (= how-many-find 1) (report-prime (- (runtime) start-time)) (iter n (- how-many-find 1)))
+      (iter n how-many-find)))
+  (iter larger-than how-many-find))
 ;(search-for-primes 1000 3)
 ;(search-for-primes 10000 3)
 ;(search-for-primes 100000 3)
+;(search-for-primes 1000000 3)
+
+;Exercise 1.23
+(defn next-divisor-guess
+  "Returns a next guess for the divisor to a given divisor"
+  [x] (if (= x 2) 3 (+ x 2)))
+
+;Exercise 1.24
+(defn expmod [base exp m]
+  (cond (= exp 0) 1
+    (even? exp) (rem (square (expmod base (/ exp 2) m)) m)
+    :else (rem (* base (expmod base (- exp 1) m)) m)))
+(defn fermat-test [n]
+  (defn try-it [a]
+    (= (expmod a n n) a))
+  (try-it (+ 1 (rand-int (- n 1)))))
+(defn fast-prime? [n times]
+  (cond (= times 0) true
+    (fermat-test n) (fast-prime? n (- times 1))
+    :else false))
