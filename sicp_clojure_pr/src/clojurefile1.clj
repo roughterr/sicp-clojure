@@ -247,3 +247,25 @@
   (cond (= times 0) true
     (fermat-test n) (fast-prime? n (- times 1))
     :else false))
+
+;Exercise 1.25
+;(defn expmod [base exp m]
+;  (rem (fast-expt-iter base exp) m))
+;(expmod 1 0 1)
+;(expmod1 1 0 1)
+
+;Exercise 1.27
+(defn fool-fast-prime? [n]
+  (defn iter [i]
+    (cond (= i 1) (println n "is a prime number.")
+      (not (= (expmod a n n) a)) (println n "is certainly not prime.")
+      :else (iter (- i 1))))
+  (iter (- n 1)))
+(fool-fast-prime? 17) ; a conventional prime number
+(fool-fast-prime? 18) ; not a prime number
+(fool-fast-prime? 561) ; Carmichael number
+(fool-fast-prime? 1105) ; Carmichael number
+(fool-fast-prime? 1729) ; Carmichael number
+(fool-fast-prime? 2465) ; Carmichael number
+(fool-fast-prime? 2821) ; Carmichael number
+(fool-fast-prime? 6601) ; Carmichael number
