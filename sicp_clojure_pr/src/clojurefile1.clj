@@ -160,7 +160,7 @@
 
 ;Exercise 1.17
 (defn fast-multiplication-rec [a b]
-  (cond (= b 1) a (even? b) (fast-multiplication (+ a a) (/ b 2)) :else (+ a (fast-multiplication a (- b 1)))))
+  (cond (= b 1) a (even? b) (fast-multiplication-rec (+ a a) (/ b 2)) :else (+ a (fast-multiplication-rec a (- b 1)))))
 
 ;Exercise 1.18
 (defn fast-multiplication-iter [a b]
@@ -169,20 +169,25 @@
   (iter a b 0))
 
 ;Exercise 1.19
-(defn fib [n]
-  (fib-iter 1 0 0 1 n))
 (defn fib-iter [a b p q count]
   ;  (println "a=" a ", b=" b ", p=" p ", q=" q ", count=" count)
   (cond (= count 0) b
-    (even? count)
-    (fib-iter a b
-      (+ (* p p) (* q q)) ; compute p′
-      (+ (* q q) (* 2 (* p q))) ; compute q′
-      (/ count 2))
-    :else (fib-iter (+ (* b q) (* a q) (* a p))
-            (+ (* b p) (* a q))
-            p q
-            (- count 1))))
+        (even? count)
+        (fib-iter a b
+                  (+ (* p p) (* q q)) ; compute p′
+                  (+ (* q q) (* 2 (* p q))) ; compute q′
+                  (/ count 2))
+        :else (fib-iter (+ (* b q) (* a q) (* a p))
+                        (+ (* b p) (* a q))
+                        p q
+                        (- count 1))))
+(defn fib [n]
+  (fib-iter 1 0 0 1 n))
+
+;Exercise 1.23
+(defn next-divisor-guess
+  "Returns a next guess for the divisor to a given divisor"
+  [x] (if (= x 2) 3 (+ x 2)))
 
 ;Exercise 1.21
 (defn divides? [a b] (= (rem b a) 0))
@@ -196,6 +201,20 @@
 ;(smallest-divisor 199)
 ;(smallest-divisor 1999)
 ;(smallest-divisor 19999)
+
+;Exercise 1.24
+(defn expmod [base exp m]
+  (cond (= exp 0) 1
+        (even? exp) (rem (square (expmod base (/ exp 2) m)) m)
+        :else (rem (* base (expmod base (- exp 1) m)) m)))
+(defn fermat-test [n]
+  (defn try-it [a]
+    (= (expmod a n n) a))
+  (try-it (+ 1 (rand-int (- n 1)))))
+(defn fast-prime? [n times]
+  (cond (= times 0) true
+        (fermat-test n) (fast-prime? n (- times 1))
+        :else false))
 
 ;Exercise 1.22
 (defn prime? [n]
@@ -229,25 +248,6 @@
 ;(search-for-primes 100000 3)
 ;(search-for-primes 1000000 3)
 
-;Exercise 1.23
-(defn next-divisor-guess
-  "Returns a next guess for the divisor to a given divisor"
-  [x] (if (= x 2) 3 (+ x 2)))
-
-;Exercise 1.24
-(defn expmod [base exp m]
-  (cond (= exp 0) 1
-    (even? exp) (rem (square (expmod base (/ exp 2) m)) m)
-    :else (rem (* base (expmod base (- exp 1) m)) m)))
-(defn fermat-test [n]
-  (defn try-it [a]
-    (= (expmod a n n) a))
-  (try-it (+ 1 (rand-int (- n 1)))))
-(defn fast-prime? [n times]
-  (cond (= times 0) true
-    (fermat-test n) (fast-prime? n (- times 1))
-    :else false))
-
 ;Exercise 1.25
 ;(defn expmod [base exp m]
 ;  (rem (fast-expt-iter base exp) m))
@@ -261,11 +261,11 @@
       (not (= (expmod a n n) a)) (println n "is certainly not prime.")
       :else (iter (- i 1))))
   (iter (- n 1)))
-(fool-fast-prime? 17) ; a conventional prime number
-(fool-fast-prime? 18) ; not a prime number
-(fool-fast-prime? 561) ; Carmichael number
-(fool-fast-prime? 1105) ; Carmichael number
-(fool-fast-prime? 1729) ; Carmichael number
-(fool-fast-prime? 2465) ; Carmichael number
-(fool-fast-prime? 2821) ; Carmichael number
-(fool-fast-prime? 6601) ; Carmichael number
+;(fool-fast-prime? 17) ; a conventional prime number
+;(fool-fast-prime? 18) ; not a prime number
+;(fool-fast-prime? 561) ; Carmichael number
+;(fool-fast-prime? 1105) ; Carmichael number
+;(fool-fast-prime? 1729) ; Carmichael number
+;(fool-fast-prime? 2465) ; Carmichael number
+;(fool-fast-prime? 2821) ; Carmichael number
+;(fool-fast-prime? 6601) ; Carmichael number
