@@ -172,15 +172,15 @@
 (defn fib-iter [a b p q count]
   ;  (println "a=" a ", b=" b ", p=" p ", q=" q ", count=" count)
   (cond (= count 0) b
-        (even? count)
-        (fib-iter a b
-                  (+ (* p p) (* q q)) ; compute p′
-                  (+ (* q q) (* 2 (* p q))) ; compute q′
-                  (/ count 2))
-        :else (fib-iter (+ (* b q) (* a q) (* a p))
-                        (+ (* b p) (* a q))
-                        p q
-                        (- count 1))))
+    (even? count)
+    (fib-iter a b
+      (+ (* p p) (* q q)) ; compute p′
+      (+ (* q q) (* 2 (* p q))) ; compute q′
+      (/ count 2))
+    :else (fib-iter (+ (* b q) (* a q) (* a p))
+            (+ (* b p) (* a q))
+            p q
+            (- count 1))))
 (defn fib [n]
   (fib-iter 1 0 0 1 n))
 
@@ -205,16 +205,16 @@
 ;Exercise 1.24
 (defn expmod [base exp m]
   (cond (= exp 0) 1
-        (even? exp) (rem (square (expmod base (/ exp 2) m)) m)
-        :else (rem (* base (expmod base (- exp 1) m)) m)))
+    (even? exp) (rem (square (expmod base (/ exp 2) m)) m)
+    :else (rem (* base (expmod base (- exp 1) m)) m)))
 (defn fermat-test [n]
   (defn try-it [a]
     (= (expmod a n n) a))
   (try-it (+ 1 (rand-int (- n 1)))))
 (defn fast-prime? [n times]
   (cond (= times 0) true
-        (fermat-test n) (fast-prime? n (- times 1))
-        :else false))
+    (fermat-test n) (fast-prime? n (- times 1))
+    :else false))
 
 ;Exercise 1.22
 (defn prime? [n]
@@ -269,3 +269,27 @@
 ;(fool-fast-prime? 2465) ; Carmichael number
 ;(fool-fast-prime? 2821) ; Carmichael number
 ;(fool-fast-prime? 6601) ; Carmichael number
+
+;Exercise 1.28
+(defn square-with-check
+  "checks if a given square is not a nontrivial square root of 1 modulo m. If it is nontrivial, returns -1"
+  [a m]
+  (def square-result (square a))
+  (def modulo (rem square-result m))
+  (def is-nontrivial? (and (not (= a (- m 1))) (not (= a 1)) (= modulo 1)))
+  (if is-nontrivial? 0 modulo))
+(defn miller-rabin-expmod [base exp m]
+  (cond (= exp 0) 1
+    (even? exp) (square-with-check (miller-rabin-expmod base (/ exp 2) m) m)
+    :else (rem (* base (miller-rabin-expmod base (- exp 1) m)) m)))
+(defn miller-rabin-test
+  "Checks if a given number is prime using Miller-Rabin test"
+  [n]
+  (def expmod-result (miller-rabin-expmod (+ (rand-int (- n 2)) 2) (- n 1) n))
+  (cond (= expmod-result 1)))
+(defn fast-prime-miller-rabin? [n times]
+  (def expmod-result (miller-rabin-expmod (+ (rand-int (- n 2)) 2) (- n 1) n))
+  (cond (= times 0) true (= expmod-result 0) false
+    :else (fast-prime-miller-rabin? n (- times 1))))
+;(println (fast-prime-miller-rabin? 17 5))
+;(println (fast-prime-miller-rabin? 2465 2))
